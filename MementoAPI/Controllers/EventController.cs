@@ -1,4 +1,8 @@
-﻿using DatabaseAccess.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using DatabaseAccess.Data;
 using DatabaseAccess.Models;
 using MementoAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -6,27 +10,26 @@ using Microsoft.AspNetCore.Mvc;
 namespace MementoAPI.Controllers;
 
 [Route("api/[controller]")]
-public class UserController : Controller
+public class EventController : Controller
 {
-    public IUserData _userData { get; }
+    private readonly IEventData _eventData;
 
-    public UserController(IUserData userData)
+    public EventController(IEventData eventData)
     {
-        _userData = userData;
+        _eventData = eventData;
     }
-
 
     [HttpPost]
     [ValidateModel]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Post(UserModel userModel)
+    public async Task<IActionResult> Post(EventModel eventModel)
     {
-        await _userData.CreateUser(userModel);
+        await _eventData.CreateEvent(eventModel);
 
-        var userID = userModel.Id;
+        var id = eventModel.Id;
 
-        return Ok(userID);
+        return Ok(id);
     }
 
     [HttpGet("{id}")]
@@ -40,32 +43,32 @@ public class UserController : Controller
             return BadRequest();
         }
 
-        var user = await _userData.ReadUser(id);
+        var _event = await _eventData.ReadEvent(id);
 
-        if (user != null)
+        if(_event == null)
         {
-            return Ok(user);
+            return BadRequest();
         }
-        return BadRequest();
+
+        return Ok(_event);
     }
-    
+
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Put([FromBody] UserUpdateModel data)
+    public async Task<IActionResult> Put([FromBody] EventUpdateModel data)
     {
-        await _userData.UpdateUser(data.Id, data.Email);
+        await _eventData.UpdateEvent(data.Id, data.EventName, data.Description, data.Location, data.DateTime);
 
         return Ok();
     }
-
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(string id)
     {
-        await _userData.DeleteUser(id);
+        await _eventData.DeleteEvent(id);
 
         return Ok();
     }

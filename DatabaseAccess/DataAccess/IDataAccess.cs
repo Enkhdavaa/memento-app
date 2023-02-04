@@ -8,6 +8,6 @@ namespace DatabaseAccess.DataAccess
         string? UserCollectionName { get; }
         string? EventCollectionName { get; }
 
-        IMongoCollection<T> GetCollection<T>(string databaseName, in string collectionName);
+        IMongoCollection<T> GetCollection<T>(string? databaseName, in string? collectionName);
     }
 }

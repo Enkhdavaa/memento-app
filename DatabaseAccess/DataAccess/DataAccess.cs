@@ -25,7 +25,7 @@ public class DataAccess : IDataAccess
         _client = new MongoClient(settings);
     }
 
-    public IMongoCollection<T> GetCollection<T>(string databaseName, in string collectionName)
+    public IMongoCollection<T> GetCollection<T>(string? databaseName, in string? collectionName)
     {
         var db = _client.GetDatabase(databaseName);
         return db.GetCollection<T>(collectionName);

@@ -5,7 +5,7 @@ namespace DatabaseAccess.Data;
 public interface IUserData
 {
     Task CreateUser(UserModel user);
-    Task DeleteEvent(UserModel user);
-    Task<UserModel> ReadUser(UserModel user);
-    Task UpdateUser(UserModel user);
+    Task DeleteUser(string id);
+    Task<UserModel> ReadUser(string id);
+    Task UpdateUser(string id, string? email);
 }

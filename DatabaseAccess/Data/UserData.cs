@@ -7,8 +7,8 @@ namespace DatabaseAccess.Data;
 public class UserData : IUserData
 {
     private readonly IDataAccess _dataAccess;
-    private readonly string _databaseName;
-    private readonly string _collectionName;
+    private readonly string? _databaseName;
+    private readonly string? _collectionName;
 
 
     public UserData(IDataAccess dataAccess)
@@ -16,7 +16,6 @@ public class UserData : IUserData
         _dataAccess = dataAccess;
         _databaseName = _dataAccess.DatabaseName;
         _collectionName = _dataAccess.UserCollectionName;
-
     }
 
     public Task CreateUser(UserModel user)
@@ -25,24 +24,39 @@ public class UserData : IUserData
         return collection.InsertOneAsync(user);
     }
 
-    public async Task<UserModel> ReadUser(UserModel user)
+    public async Task<UserModel> ReadUser(string id)
     {
         var collection = _dataAccess.GetCollection<UserModel>(_databaseName, _collectionName);
-        var foundUser = await collection.FindAsync(c => c.Id == user.Id);
+        var foundUser = await collection.FindAsync(c => c.Id == id);
         return foundUser.FirstOrDefault();
     }
 
-    public Task UpdateUser(UserModel user)
+    public async Task UpdateUser(string id, string? email)
     {
         var collection = _dataAccess.GetCollection<UserModel>(_databaseName, _collectionName);
-        var filter = Builders<UserModel>.Filter.Eq("Id", user.Id);
-        return collection.ReplaceOneAsync(filter, user, new ReplaceOptions { IsUpsert = true });
+        var foundUsers = await collection.FindAsync(c => c.Id == id);
+        var user = foundUsers.FirstOrDefault();
+
+        var updatedUser = new UserModel
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = email
+        };
+
+        var filter = Builders<UserModel>.Filter.Eq("Id", id);
+        var result = collection.ReplaceOneAsync(filter, updatedUser, new ReplaceOptions { IsUpsert = true });
+        if(result.IsFaulted)
+        {
+            throw new Exception("Update User data failed");
+        }
     }
 
-    public Task DeleteEvent(UserModel user)
+    public Task DeleteUser(string id)
     {
         var collection = _dataAccess.GetCollection<UserModel>(_databaseName, _collectionName);
-        return collection.DeleteOneAsync(c => c.Id == user.Id);
+        return collection.DeleteOneAsync(c => c.Id == id);
     }
 
     private async Task<List<UserModel>> GetAllUsers()
