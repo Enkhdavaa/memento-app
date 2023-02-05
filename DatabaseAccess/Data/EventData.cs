@@ -76,4 +76,3 @@ public class EventData : IEventData
         return results.ToList();
     }
 }
-

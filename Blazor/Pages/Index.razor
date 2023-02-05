@@ -3,27 +3,38 @@
 <PageTitle>Home</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Welcome to Memento Events!</MudText>
-<MudAlert Severity="Severity.Normal"> The website is in under development. Coming soon ... <MudLink Href="https://memento.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.memento.com</b></MudLink></MudAlert>
+<MudAlert Severity="Severity.Normal"> The website is under development. Coming soon ... <MudLink Href="https://memento.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.memento.com</b></MudLink></MudAlert>
 
-<MudStack Row="true" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
-    <MudCard>
-        <MudCardMedia Image="" Height="200" />
-        <MudCardContent>
-            <MudText Typo="Typo.h5">Carnival Eindhoven</MudText>
-            <MudText Typo="Typo.body2">Region: Eindhoven, The Netherlands</MudText>
-            <MudText Typo="Typo.body2">Place: Central Train Station</MudText>
-            <MudText Typo="Typo.body2">Date: 2023.03.03</MudText>
-            <MudText Typo="Typo.body2">Time: 14:00 to 17:00</MudText>
-            <MudText Typo="Typo.body2">Price: 30 euro</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-            <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default"/>
-            <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
-        </MudCardActions>
-    </MudCard>
-</MudStack>
+
+@for (var i = 0; i < colLoopTimes; i++)
+{
+    <MudStack Class="py-12" Row="true" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
+        @for (var i = 0; i < rowLoopTimes; i++)
+        {
+            <MudCard>
+                <MudCardMedia Image="" Height="200" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h5">Carnival Eindhoven</MudText>
+                    <MudText Typo="Typo.body2">Region: Eindhoven, The Netherlands</MudText>
+                    <MudText Typo="Typo.body2">Place: Central Train Station</MudText>
+                    <MudText Typo="Typo.body2">Date: 2023.03.03</MudText>
+                    <MudText Typo="Typo.body2">Time: 14:00 to 17:00</MudText>
+                    <MudText Typo="Typo.body2">Price: 30 euro</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
+                </MudCardActions>
+            </MudCard>
+        }
+    </MudStack>
+    
+}
 
 @code{
+    int numberOfItems = 100;
 
+    int rowLoopTimes = 5;
+    int colLoopTimes = 100 / 5;
 }
